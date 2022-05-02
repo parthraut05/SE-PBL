@@ -1,0 +1,41 @@
+<%- include("header")-%>  
+
+<div class="header">
+    <div class="aux">
+        <img src="https://cdn-icons-png.flaticon.com/512/4228/4228724.png" id="logoNav" alt="">
+        <span id="navHead"><strong>Sympto-Check</strong></span>
+    </div>
+</div>
+<form action="/questionPage" method="post"> 
+    <div class="flexCon">
+
+        <script>
+            var mainSymptomes = [];
+            console.log(typeof mainSymptomes +" lol")
+        function func(temp){ 
+           if(!mainSymptomes.includes("S"+temp)){
+           mainSymptomes.push("S"+temp);
+           }else{ 
+           var ind=mainSymptomes.indexOf("S"+temp); 
+           mainSymptomes.splice(ind,ind+1); 
+           } 
+           document.getElementById("Symtoms").value = mainSymptomes;
+         } 
+        </script>
+
+        <div class="sym" id="1" onclick=func(1)>Fever</div>
+        <div class="sym" id="2" onclick=func(4)>Mild Headache</div>
+        <div class="sym" id="3" onclick=func(2)>Sore Throat</div>
+        <div class="sym" id="4" onclick=func(14)>Muscle pain</div>
+        <div class="sym" id="5" onclick=func(23)>Feeling out of breath</div>
+        <div class="sym" id="6" onclick=func(10)>Abdominal Pain</div>
+        <div class="sym" id="7" onclick=func(3)>Cough</div>
+        
+    </div>
+    <center>
+    <button type="submit" id="Symtoms" name="list"  value=[]>Next</button>
+    </center>
+</form>
+
+
+<%- include("footer")-%>

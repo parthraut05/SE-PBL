@@ -1,0 +1,47 @@
+*{
+    margin : 0px;padding: 0px;box-sizing: border-box;
+}
+.navBar{
+    text-align:center;
+    height : 80px;
+    width : 100%;
+    background-color:#00BBF6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width:100%;
+}
+.navBar h1{
+    display:inline-block;
+    margin-top:15px;
+}
+.qTitle{
+    text-align: center;
+}
+.mainCon{
+    padding : 50px;
+    background-color : #f2f2f2;
+    width: 90%;
+    margin-inline:auto;
+}
+.qTitle{
+    margin-left : 25px;
+    padding : 30px;
+}
+.que{
+    margin : 15px;
+    padding : 30px;
+    font-size :2rem;
+}
+
+button{
+    width : 50px;
+    padding : 10px;
+    background-color : #28EB3C;
+    border: none;
+    border-radius: 8px;
+    margin-left : 20px;
+    margin-right : 20px;
+}
+.btns{
+    text-align : center;
+    margin-top:45px;
+}
