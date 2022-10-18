@@ -1,0 +1,109 @@
+<%- include("header")-%>  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Page</title>
+    <style>
+        *{
+    margin : 0px;padding: 0px;box-sizing: border-box;
+}
+.navBar{
+    text-align:center;
+    height : 80px;
+    width : 100%;
+    background-color:#00BBF6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width:100%;
+}
+.navBar h1{
+    display:inline-block;
+    margin-top:15px;
+}
+.qTitle{
+    text-align: center;
+}
+.mainCon{
+    padding : 50px;
+    background-color : #f2f2f2;
+    width: 90%;
+    margin-inline:auto;
+    border-radius:12px;
+}
+.qTitle{
+    margin-left : 25px;
+    padding : 30px;
+}
+.que{
+    margin : 15px;
+    padding : 30px;
+    font-size :2rem;
+}
+
+button{
+    width : 170px;
+    padding : 10px;
+    background-color : #28EB3C;
+    border: none;
+    border-radius: 8px;
+    margin-left : 20px;
+    margin-right : 20px;
+}
+.btns{
+    text-align : center;
+    margin-top:45px;
+}
+.sumIcon{
+    float : right;
+}
+p{
+    display: inline-block;
+}
+.content{
+    font-size: 2rem;
+    margin-top: 80px;
+}
+.sec{
+    background-color : rgb(104, 103, 103);
+    color: white;
+    padding :30px;
+    margin : 15px;
+    border-radius:12px;
+}
+button:hover{
+    background-color : rgb(104, 103, 103);
+    color: #28EB3C;
+}
+    </style>
+</head>
+<body>
+    <div class="navBar">
+        <h1>Sympto-Check</h1>
+      </div>
+    <h1 class="qTitle">Results</h1>
+    <div class="mainCon">
+        <div class="qCon">
+            <p class="que">Summary for your Diagnosis is...</p>
+            <img class = "sumIcon" src="/images/summary.png" alt="">
+            <div class="content">
+                <div id="diseaseName" class="sec">Disease Name : <%= o %></div>
+                <div id="percentage" class="sec">Percentage : <%= p %></div>
+                <div id="precautions" class="sec">
+                    Precautions :<br>
+                    <%= pr %>
+                </div>
+                <center><button><strong>PRINT</strong></button></center>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/summary.js"></script>
+
+</html>
+
+<%- include("footer")-%>

@@ -1,33 +1,39 @@
+const dotenv = require('dotenv'); // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
 const express=require("express");
 const bodyParser =require("body-parser");
 const https= require("https");
 const _=require("lodash");
 //db
 const mongoose = require("mongoose");
-const { intersection, reject, includes } = require("lodash");
+const { intersection, reject, includes, isInteger } = require("lodash");
 const { resourceUsage } = require("process");
 const { application } = require("express");
 const { resolve } = require("path");
-mongoose.connect("mongodb://localhost:27017/pbl1");
+const { Int32 } = require("mongodb");
+mongoose.connect(process.env.MONGOURL,{ useNewUrlParser: true });
+
+// mongoose.connection.useDb('pbl');
+
  // schems
- const Sscema = mongoose.Schema({
+ const Sscema = new mongoose.Schema({
      _id:String,
      SymptomName:String,
      DiseaseID:[],
      SymptomQ:String
  });
 
-const Symptoms = mongoose.model("Symptoms1",Sscema);
+const Symptoms = mongoose.model("symptoms1",Sscema);
 
-const Dschema = mongoose.Schema({
-    _id:String,
+const Dschema = new mongoose.Schema({
+    _id:Number,
     DiseaseName:String,
     Precautions:[],
     SymptomID:[]
 });
 
 
-const Disease = mongoose.model("Disease1",Dschema);
+const Disease = mongoose.model("disease1",Dschema);
 
 
 //imp
@@ -53,8 +59,14 @@ var SchemaList = [];
 // get request
 
 app.route("/")
-.get(function(req,res){
+.get(async function(req,res){
     res.render("start1");
+    try{
+        const f = await Disease.find();
+        console.log(f);
+    }catch(e){
+        console.log(e);
+    }
 })
 .post(function(req,res){
     res.render("form1");
@@ -83,11 +95,18 @@ app.route("/questionPage")
     async function createDlist(){
         for(let i=0;i<mainsymp.length;i++)
         {
-            try{const b = await Symptoms.findOne({_id:mainsymp[i]});
-            if(b.DiseaseID!==null) var items = b.DiseaseID;
+            try{
+            const b = await Symptoms.findOne({_id:mainsymp[i]});
+            if(b!==null){
+            var items = b.DiseaseID;
+            console.log("items ",items);
             items.forEach((result)=>{
-                if(!Dlist.includes(result)) Dlist.push(result);
-            })}
+                if(!Dlist.includes(result)){
+                    Dlist.push(result);
+                }
+            })
+        }
+        }
             catch(error){console.log(error)}
         };
         return;
@@ -98,7 +117,9 @@ app.route("/questionPage")
         for(let i=0;i<Dlist.length;i++){
             try{
                 let num = 0;
+                //console.log(Dlist);
                 var pqr = await Disease.findOne({_id:Dlist[i]});
+                //console.log(pqr);
                 const pq = pqr.SymptomID;
                 for(let j=0;j<pq.length;j++){
                     const pqrs = await Symptoms.findOne({_id:pq[j]});
@@ -108,19 +129,20 @@ app.route("/questionPage")
             catch(error){console.log(error)}
         }
         const key = '_id';
-
-        tempq = [...new Map(tempq.map(item =>
-        [item[key], item])).values()];
-
-        console.log("-------------------------");
         //console.log(tempq);
+
+        /*tempq = [...new Map(tempq.map(item =>
+        [item[key], item])).values()];*/
+
+        // console.log("-------------------------");
+        console.log(tempq);
        
 
     }
 
     async function createQuestionPage(){
         await findSymptomQ();
-        console.log(Dlist);
+        //console.log(Dlist);
         //console.log(tempq.SymptomQ);
         res.render("single-ques-page",{question:tempq[counter].SymptomQ});
         counter++;
@@ -138,11 +160,12 @@ app.route("/nextQuestion")
         console.log(finalSymptoms);
     }
     if(counter<tempq.length) {
-        
+        if(tempq[counter] !== null){
         res.render("single-ques-page",{
             question:tempq[counter].SymptomQ
             
         });
+    }
         counter++;
     }
     else{
@@ -196,12 +219,13 @@ app.route("/nextQuestion")
 
         async function DisplayDisease(){
             await PredictDisease();
-            console.log(index);
-            console.log(SchemaList[index].Dname);
-            console.log(SchemaList[index].length);
-            console.log(SchemaList[index].match);
-            console.log(SchemaList[index].Precautions);
-            res.send(SchemaList);
+            // console.log(index);
+            // console.log(SchemaList[index].Dname);
+            // console.log(SchemaList[index].length);
+            // console.log(SchemaList[index].match);
+            // console.log(SchemaList[index].Precautions);
+            let a = SchemaList[index].match/SchemaList[index].length*100
+            res.render("summary",{o:SchemaList[index].Dname,p:a,pr:SchemaList[index].Precautions});
         }
 
         DisplayDisease();
@@ -209,167 +233,11 @@ app.route("/nextQuestion")
 
     }
     
-})
-
-
-
-
-// SchemaList=[];
-// MSList=[];
-// Dlist.forEach(function(i){
-//   var counter=0;
-//   var schema={
-//     Dname:"",
-//     length:0,
-//     match:0,
-//     Precautions:[]
-//   }
-  
-//   Disease.findOne({_id:i},(err,found)=>
-// {
-//     var list=found.SymptomID;
-//     schema.Dname=found.DiseaseName;
-//     schema.length=list.length;
-//     schema.Precautions=found.Precautions;
-//     list.forEach((j)=>{
-//       if(MSList.includes(j))
-//       {
-//         couter++;
-//       }
-//     });
-//     SchemaList.push(schema);
-// });
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.get("/",function(req,res)
-// {
-//     res.render("start1");//start1
-//     app.post("/start1",function(req,res)
-//     {
-//         res.render("form1");
-//     });
-//     app.post("/form1",function(req,res)
-//     {
-//         res.render("start");
-//     });
-//     app.post("/",function(req1,res1){
-//         var list = req.body.list;
-//         //setTimeout(myFunction, 500);
-//         // console.log(typeof list);
-//         mainsymp=list.split(',');
-//         console.log(mainsymp);
-//         mainsymp.forEach(function(symp)
-//         {
-//             Symptoms.findOne({_id:symp},function(err,found){
-//                 if(err)
-//                 {
-//                     console.log(err);
-//                 }
-//                 else
-//                 {
-//                     var item= found.DiseaseID;
-//                     //  console.log(item);
-//                     item.forEach(function(i){
-//                         if(!Dlist.includes(i))
-//                         {
-//                              Dlist.push(i);
-//                              //console.log(Dlist);
-//                         }
-//                     });
-//                 }
-//             });
-//         });
-        
-//         // function myFunction()
-//         // {
-
-//             console.log(Dlist);
-//             Dlist.forEach(function(i){
-//                 let counter=0;
-//                 Disease.findOne({_id:i},async function(err,fou){
-//                     if(err)
-//                     {
-//                         console.log(err);
-//                     }
-//                     else
-//                     {
-//                         fou.SymptomID.forEach(function(i){
-//                             Symptoms.findOne({_id:i},function(err,found){
-//                                 if(err)
-//                                 {
-//                                     console.log(err);
-//                                 }
-//                                 else
-//                                 {
-//                                     //console.log(found.SymptomQ);
-//                                     tempq.push(found.SymptomQ);
-//                                     //console.log(tempq);
-//                                 }
-//                             })
-//                         });
-//                         //().then(console.log(tempq);
-                        
-//                     }
-//                 });
-                
-//             });
-//            // console.log("LLLL");
-            
-//            setTimeout(()=>{
-//                var num =0;
-//                res1.render("single-ques-page",{question:tempq[0]});
-//                app.post("/yes",function(req2,res2)
-//                             {
-//                                 num++;
-//                                 var temp=req2.body.sub;
-//                                 if(temp==1)
-//                                 {
-//                                     counter++;
-//                                 }
-//                                 if(num<tempq.length)
-//                                 {
-//                                     res2.render("single-ques-page",{
-//                                         quest:tempq[num]
-//                                     });
-//                                 }
-//                             });
-//            },500);
-
-//         //}
-       
-//     });
-    
-//     // app.post("/yes",function(req,res){
-//     //     var foundDisease;
-//     //     counter++;
-//     //     Disease.findOne({id:tempq[counter].DiseaseID},function(err,found){
-//     //         if(!err) foundDisease = found;
-//     //     })
-//     //     // const first = {
-//     //     //     Disease: foundDisease.DiseaseName,
-//     //     //     length: foundDisease.SymptomID.length,
-//     //     //     matched:
-//     //     // }
-//     //     setTimeout(()=>{console.log(found),500});
-//     // })
-    
-// });
-
+});
 
 // server
-app.listen(3000,function()
+const PORT = process.env.PORT || 8080;
+app.listen(PORT,function()
 {
     console.log("server started at 3000");
 });
