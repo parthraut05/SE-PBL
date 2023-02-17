@@ -15,3 +15,4 @@ Symptocheck
 ![Screenshot (40)](https://user-images.githubusercontent.com/81025901/219570746-6a8528bd-8e16-4071-8fb2-e5f89f4fe5fb.png)
 ![Screenshot (41)](https://user-images.githubusercontent.com/81025901/219570761-f34eda2e-9e86-415a-b1b1-11f9451aa15d.png)
 ![Screenshot (42)](https://user-images.githubusercontent.com/81025901/219570767-38a0f208-46c5-4633-b31d-db36e658ea8a.png)
+![Screenshot (44)](https://user-images.githubusercontent.com/81025901/219570953-46bb3d1d-1335-4703-b028-bde11b57c653.png)
